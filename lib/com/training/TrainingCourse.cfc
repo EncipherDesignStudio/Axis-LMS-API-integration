@@ -32,33 +32,11 @@ component {
 	property name = 'RegistrationURL'		default = '';
 	property name = 'RegistrationTitle'		default = 'Register Now';
 
-	/*
-		additional properties provided by LMS API
-
-		id	0				type = 'numeric'
-		DetailURL			type = 'text'
-		RegistrationTitle	type = 'text'
-		RegistrationURL		type = 'text'
-		admin_description 	type = 'text' formatted: date text | location text | description text
-		catalog_id
-		product-type
-		duration			0
-		info_page			html
-		name					type = 'text'
-		passing_score		0	type = 'numeric'
-		price				0	type = 'numeric'
-		//is_active			[empty string] :: use publicly_listed
-		publicly_listed 	yes|no	type = 'text'
-		//lms_version		10.30
-
-	*/
-
-
 
 	/**
 	*
 	* @name			init
-	* @hint			Creates Training Course object
+	* @hint			Populates Training Course from passed struct variables
 	*
 	* @output		false
 	* @returns		TrainingCourse
@@ -69,12 +47,6 @@ component {
 	) {
 
 		var local.course = arguments.course;
-
-		if ( structIsEmpty( local.course ) ) {
-
-			return;
-
-		}
 
 		if ( structkeyexists( local.course, 'id' ) ) {
 
@@ -126,6 +98,12 @@ component {
 
 		}
 
+		/**
+		 *
+		 * admin_description contains the date, location, and course description
+		 * formatted as a pipe | delimited string
+		 *
+		**/
 		if ( structkeyexists( local.course, 'admin_description' ) ) {
 
 			setDate( local.course.admin_description );
@@ -136,6 +114,11 @@ component {
 
 		}
 
+		/**
+		 *
+		 * setDateSort & setDateFormat calls for the setDate
+		 *
+		 **/
 		setDateSort();
 
 		setDateFormat();
@@ -170,6 +153,11 @@ component {
 
 		}
 
+		/**
+		 *
+		 * similar to description, may contain content variations
+		 *
+		*/
 		if ( structkeyexists( local.course, 'info_page' ) ) {
 
 			setDetail( local.course.info_page );
@@ -212,7 +200,7 @@ component {
 	/**
 	*
 	* @name			getInstance
-	* @hint			Accesses TrainingCourse Instance
+	* @hint			Accesses Course  TrainingCourse Instance
 	*
 	* @output		false
 	* @returns		TrainingCourse Instance
@@ -228,8 +216,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setID
+	* @hint			Adds unique ID to Course
 	*
 	* @output		false
 	* @returns		numeric
@@ -247,8 +235,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getID
+	* @hint			Accesses Course ID
 	*
 	* @output		false
 	* @returns		numeric
@@ -264,8 +252,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setIsActive
+	* @hint			Adds Course availability
 	*
 	* @output		false
 	* @returns		string
@@ -283,8 +271,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getIsActive
+	* @hint			Accesses Course availability
 	*
 	* @output		false
 	* @returns		string
@@ -300,8 +288,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setTitle
+	* @hint			Adds Title to Course
 	*
 	* @output		false
 	* @returns		string
@@ -318,8 +306,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getTitle
+	* @hint			Accesses Course Title
 	*
 	* @output		false
 	* @returns		string
@@ -335,8 +323,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setType
+	* @hint			Parses type code from catalog_id then adds to Course
 	*
 	* @output		false
 	* @returns		string
@@ -361,8 +349,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getType
+	* @hint			Accesses Course Type [ virtual, on-site | on-prem, classroom at specified location ]
 	*
 	* @output		false
 	* @returns		string
@@ -370,7 +358,6 @@ component {
 	*/
 	public string function getType() {
 
-		//if ( ! structkeyexists( this, 'Type' ) ) { setType( arguments.Type ); }
 		return this.Type;
 
 	}
@@ -379,8 +366,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setProduct
+	* @hint			Parses product code from catalog_id then adds to Course
 	*
 	* @output		false
 	* @returns		string
@@ -405,8 +392,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getProduct
+	* @hint			Accesses Course Product
 	*
 	* @output		false
 	* @returns		string
@@ -414,7 +401,6 @@ component {
 	*/
 	public string function getProduct() {
 
-		//if ( ! structkeyexists( this, 'Product' ) ) { setProduct( arguments.Product ); }
 		return this.Product;
 
 	}
@@ -423,8 +409,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setDate
+	* @hint			Parses admin_description for Course date
 	*
 	* @output		false
 	* @returns		string
@@ -465,8 +451,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getDate
+	* @hint			Accesses Course Date
 	*
 	* @output		false
 	* @returns		string
@@ -482,8 +468,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setDateFormat
+	* @hint			Formats Date for Course Display
 	*
 	* @output		false
 	* @returns		string
@@ -550,8 +536,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getDateFormat
+	* @hint			Accesses Formatted Date for display
 	*
 	* @output		false
 	* @returns		string
@@ -567,8 +553,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setDateSort
+	* @hint			Generates a Date Format for sorting
 	*
 	* @output		false
 	* @returns		string
@@ -622,8 +608,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getDateSort
+	* @hint			Accesses Course Date for sorting
 	*
 	* @output		false
 	* @returns		string
@@ -639,8 +625,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setLocation
+	* @hint			Adds Location to Course
 	*
 	* @output		false
 	* @returns		string
@@ -678,8 +664,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getLocation
+	* @hint			Accesses Course Location
 	*
 	* @output		false
 	* @returns		string
@@ -695,8 +681,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getLocationFormat
+	* @hint			Formats Course Location
 	*
 	* @output		false
 	* @returns		string
@@ -724,8 +710,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name	setInfo
+	* @hint			Parses Info and adds to Course
 	*
 	* @output		false
 	* @returns		string
@@ -756,8 +742,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name	getInfo
+	* @hint			Accesses Course Information
 	*
 	* @output		false
 	* @returns		string
@@ -773,8 +759,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getInfoFormat
+	* @hint			Formats Course Information
 	*
 	* @output		false
 	* @returns		string
@@ -802,8 +788,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setDescription
+	* @hint			Parses admin_description then adds Description to Course
 	*
 	* @output		false
 	* @returns		string
@@ -841,8 +827,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getDescription
+	* @hint			Accesses Course Description
 	*
 	* @output		false
 	* @returns		string
@@ -858,8 +844,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getDescriptionFormat
+	* @hint			Formats Course Description
 	*
 	* @output		false
 	* @returns		string
@@ -881,8 +867,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setPrice
+	* @hint			Adds Price to Course
 	*
 	* @output		false
 	* @returns		string
@@ -900,8 +886,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getPrice
+	* @hint			Accesses Course price
 	*
 	* @output		false
 	* @returns		string
@@ -917,8 +903,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setDetail
+	* @hint			Adds info_page detail to Course
 	*
 	* @output		false
 	* @returns		string
@@ -936,8 +922,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getDetail
+	* @hint			Accesses Detail Course
 	*
 	* @output		false
 	* @returns		string
@@ -953,8 +939,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getDetailURL
+	* @hint			Creates URL for detail information to Course
 	*
 	* @output		false
 	* @returns		string
@@ -984,8 +970,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getDetailURL
+	* @hint			Accesses Course Detail URL
 	*
 	* @output		false
 	* @returns		string
@@ -1001,19 +987,19 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setRegistrationURL
+	* @hint			Adds url for LMS registration page
 	*
 	* @output		false
 	* @returns		string
 	*
 	*/
-//		hint='course registration'
+//		hint=''
 	public string function setRegistrationURL() {
 
 		this.RegistrationURL = getRegistrationBaseURL()
-								& setURLTitle( this.getTitle() )
-								& '&';
+					& setURLTitle( this.getTitle() )
+					& '&';
 
 		return this.RegistrationURL;
 
@@ -1023,8 +1009,8 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			getRegistrationURL
+	* @hint			Accesses Course registration url
 	*
 	* @output		false
 	* @returns		string
@@ -1040,9 +1026,10 @@ component {
 
 	/**
 	*
-	* @name
-	* @hint			Accesses
+	* @name			setRegistrationTitle
+	* @hint			Adds label for the registration button to Course that can be customized
 	*
+	* @default		'Register Now'
 	* @output		false
 	* @returns		string
 	*
@@ -1060,7 +1047,7 @@ component {
 	/**
 	*
 	* @name			getRegistrationTitle
-	* @hint			Accesses
+	* @hint			Accesses Course Registration Title
 	*
 	* @output		false
 	* @returns		string

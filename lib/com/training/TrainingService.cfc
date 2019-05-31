@@ -7,7 +7,7 @@
 *
 * 	=====================================================
 *	@notes
-*		called directly to init TrainingAPI
+*		creates setTrainingAPI on init
 *
 */
 component {
@@ -627,10 +627,6 @@ component {
 	* @output		false
 	* @returns		string
 	*
-	* @notes
-	* 	possible future need to filter results, if Course list becomes large
-	* 	otherwise can be filtered with UI
-	*
 	*/
 	public string function setFilter() {
 
@@ -655,10 +651,6 @@ component {
 	*
 	* @output		false
 	* @returns		string
-	*
-	* @notes
-	* 	possible future need to filter results, if Course list becomes large
-	* 	otherwise can be filtered with UI
 	*
 	*/
 	public string function getFilter() {

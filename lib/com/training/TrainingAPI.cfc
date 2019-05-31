@@ -313,7 +313,7 @@ component {
 	/**
 	*
 	* @name			setProtocol
-	* @hint			Should be set to default secure protocol, but allows insecure override
+	* @hint			_Should_ be set to the default secure protocol, but allows insecure override
 	* @default		ssl protocol
 	*
 	* @output		false

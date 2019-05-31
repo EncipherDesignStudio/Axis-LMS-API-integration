@@ -1,21 +1,64 @@
 <cfscript>
+	/**
+	*
+	* 	Access and display LMS courses
+	*
+	*/
+	TrainingService 	= new createObject( 'component', 'TrainingService' );
 
-	TrainingService 	= new CreateObject( 'component', 'TrainingService' );
+	//variables to conditionally create views
 	DisplayType 		= TrainingService.getCourseType();
 	DisplayProduct 		= TrainingService.getCourseProduct();
 	DisplayFilter		= TrainingService.getFilter();
 
 	if ( TrainingService.getCourseID() neq '' ) {
 
+		//requests information for a specific course
 		CourseDetail = TrainingService.getTrainingData( 'course__getRecord' );
+
+		if (
+			isStruct( CourseDetail )
+			and (
+				structKeyExists( CourseDetail, 'Errors' )
+				and (
+					isArray( CourseDetail['Errors'] )
+					and arrayIsEmpty( CourseDetail['Errors'] )
+				)
+			)
+			and structKeyExists( CourseDetail, 'Data' )
+		){
+
+			Course = new createObject( 'component', 'TrainingCourse' ).init( course = CourseDetail );
+
+			//output course details if no errors
+			//DEV: writedump( var = Course );
+
+		} else {
+
+			//message:: no results found
+			writeoutput( '<p>' );
+			writeoutput( 'The course name <strong>' );
+			writeoutput( url.id );
+			writeoutput( '</strong> was not found, or is not offered at this time.' );
+			writeoutput( '</p>' );
+
+		}
+
 
 	} else {
 
 		Courses = TrainingService.getTrainingData();
 
 		if (
-			isstruct( Courses )
-			and structkeyexists( Courses, 'Data' )
+			isStruct( Courses )
+			and (
+				structKeyExists( Courses, 'Errors' )
+				and (
+					isArray( Courses['Errors'] )
+					and arrayIsEmpty( Courses['Errors'] )
+				)
+			)
+			and structKeyExists( Courses, 'Data' )
 		){
 
 			Courses = Courses['Data'];
@@ -26,34 +69,36 @@
 
 			if ( isArray( Courses ) ) {
 
-				//sort array of struct
+				//sort array of structs
 				Courses = TrainingService.ArrayStructSort( Courses, 'sort', 'asc', 'textnocase' );
 
 				//loop through Courses to display info
-				for ( item = 1; item lte ArrayLen( Courses ); item++ ) {
+				for ( item = 1; item lte arrayLen( Courses ); item++ ) {
 
-					if ( isStruct( Courses[item] ) ) {
+					if ( isStruct( Courses[item] ) and ! structIsEmpty( Courses[item] ) ) {
 
-						Course = new CreateObject( 'component', 'TrainingCourse' ).init( course = Courses[item] );
+						Course = new createObject( 'component', 'TrainingCourse' ).init( course = Courses[item] );
 
 						savecontent variable = 'CourseItem' {
 
 							//output course data
-							//writedump( var = Course );
+							//DEV: writedump( var = Course );
 
 						}
 
 						writeoutput( CourseItem );
 
-					} else if ( Len( Trim( Courses[item] ) ) ) {
+					}
+					//should catch odd cases where course data returns only the course name
+					else if ( len( trim( Courses[item] ) ) ) {
 
 						Course = Courses[item];
 
 						//set registration url
-						CourseName = Trim( Course );
+						CourseName = trim( Course );
 						RegistrationURL = TrainingService.getRegistrationURL( CourseName );
 
-						//output link
+						//format/output link
 
 					}
 
@@ -69,7 +114,7 @@
 
 		} else {
 
-			//no results found message
+			//message:: no results found
 
 		}
 
